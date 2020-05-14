@@ -41,7 +41,7 @@ namespace Zorro
             Endpoints.Add("Web", Web);
             Endpoints.Add("open", OpenLink);
             Endpoints.Add("random", RandomGame);
-            API.Start(80, Endpoints, 20);
+            API.Start(8130, Endpoints, 20);
 
         }
 
