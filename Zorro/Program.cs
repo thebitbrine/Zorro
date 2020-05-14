@@ -23,15 +23,15 @@ namespace Zorro
         private int MaxPages = 2000;
         private QuickMan API;
         private List<Entry> Entries = new List<Entry>();
-        private List<string> RandomList = new List<string>();
         public void StartServer()
         {
-            RandomList.AddRange(File.ReadAllLines(Rooter("Random.csv")));
             Entries.Add(new Entry() { IndexDate = "2019-7-16 4:22", Link = "https://github.com/thebitbrine", Repacker = "TheBitBrine", Size = "64 KB", Title = "Zorro v1.1" });
+            
+
+            Directory.CreateDirectory("Data");
+            
             new Thread(UpdateLists) { IsBackground = true }.Start();
             new Thread(WriteStats) { IsBackground = true }.Start();
-
-
 
             API = new QuickMan();
             var Endpoints = new Dictionary<string, Action<HttpListenerContext>>();
@@ -47,9 +47,7 @@ namespace Zorro
 
         public void RandomGame(HttpListenerContext Context)
         {
-            string Game = RandomList[new Random().Next(0, RandomList.Count - 1)];
-            while(!Entries.Any(x => x.Title.ToLower().Contains(Game.ToLower())))
-                Game = RandomList[new Random().Next(0, RandomList.Count - 1)];
+            string Game = Entries[new Random().Next(0, Entries.Count - 1)].Title;
             Context.Response.Redirect($"../query?q={Game}");
         }
 
@@ -213,16 +211,16 @@ namespace Zorro
                 try
                 {
                     var Files = Directory.GetFiles(Rooter("Data"));
-                    if (Entries.Count > 1) FirstRun = false;
+
                     foreach (var File in Files)
                     {
                         if (File.EndsWith(".json"))
                         {
-                            var _List = System.IO.File.ReadAllText(File);
-                            var newList = JsonConvert.DeserializeObject<List<Entry>>(_List);
-
-                            if (!FirstRun)
+                            try
                             {
+                                var _List = System.IO.File.ReadAllText(File);
+                                var newList = JsonConvert.DeserializeObject<List<Entry>>(_List);
+
                                 List<Entry> NewEntries = new List<Entry>();
                                 foreach (var en in newList)
                                 {
@@ -230,22 +228,18 @@ namespace Zorro
                                         NewEntries.Add(en);
                                 }
                                 Entries.AddRange(NewEntries);
+
                             }
-                            else
-                            {
-                                Entries.AddRange(newList);
-                            }
+                            catch { }
                         }
                     }
-                    if (!FirstRun)
-                    {
-                        new Thread(Xatab) { IsBackground = true }.Start();
-                        new Thread(Fitgirl) { IsBackground = true }.Start();
-                        new Thread(Skidrow) { IsBackground = true }.Start();
-                        new Thread(RGMechanics) { IsBackground = true }.Start();
-                        new Thread(ElAmigos) { IsBackground = true }.Start();
-                        new Thread(KapitalSin) { IsBackground = true }.Start();
-                    }
+
+                    new Thread(Xatab) { IsBackground = true }.Start();
+                    new Thread(Fitgirl) { IsBackground = true }.Start();
+                    new Thread(Skidrow) { IsBackground = true }.Start();
+                    new Thread(RGMechanics) { IsBackground = true }.Start();
+                    new Thread(ElAmigos) { IsBackground = true }.Start();
+                    new Thread(KapitalSin) { IsBackground = true }.Start();
                     Thread.Sleep(86400000);
                 }
                 catch { }
@@ -281,7 +275,7 @@ namespace Zorro
         }
         public string Rooter(string RelPath)
         {
-            return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), RelPath);
+            return RelPath;
         }
 
 
