@@ -64,7 +64,7 @@ namespace Zorro
                 }
                 Recents.AppendLine($"<a class=\"bubble\" href=\"/query?q={Rec}\">{ShowQ}</a>");
             }
-            try { API.Respond(File.ReadAllText(Rooter("Web/index.html")).Replace("%recents%",Recents.ToString()).Replace("%count%", $"With more than {Entries.Count.ToString("N").Replace(".00","")} games indexed!"), "text/html", Context); } catch { }
+            try { API.Respond(File.ReadAllText(Rooter("Web/index.html")).Replace("%recents%",Recents.ToString()).Replace("%count%", $"With more than {String.Format("{0:n0}", Entries.Count)} games indexed!"), "text/html", Context); } catch { }
             CollectStats(Context, "/", 1);
         }
 
