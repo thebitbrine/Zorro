@@ -5,7 +5,9 @@
 </div>
 
 <div align="center">
+    <a href="https://github.com/thebitbrine/zorro">
     <img alt="Website" src="https://img.shields.io/website?style=for-the-badge&url=https%3A%2F%2Fzorro.thebitbrine.com&label=status">
+      </a>
   <a href="https://github.com/thebitbrine/zorro"><img src="https://img.shields.io/github/stars/thebitbrine/zorro?color=555&logo=github&style=for-the-badge" alt="GitHub stars"></a>
   <a href="https://twitter.com/intent/tweet?text=Head over to https://zorro.thebitbrine.com/ to find the repack that fits you the best!"><img src="https://img.shields.io/badge/-tweet%20about%20this-1da1f2?logoColor=fff&logo=twitter&labelColor=1da1f2&style=for-the-badge" alt="Tweet"></a>
 </div>
