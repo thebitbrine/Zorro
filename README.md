@@ -5,13 +5,10 @@
 </div>
 
 <div align="center">
-    <a href="https://zorro.thebitbrine.com">
     <img alt="Website" src="https://img.shields.io/website?style=for-the-badge&url=https%3A%2F%2Fzorro.thebitbrine.com&label=status">
-      </a>
   <a href="https://github.com/thebitbrine/zorro"><img src="https://img.shields.io/github/stars/thebitbrine/zorro?color=555&logo=github&style=for-the-badge" alt="GitHub stars"></a>
   <a href="https://twitter.com/intent/tweet?text=Head over to https://zorro.thebitbrine.com/ to find the repack that fits you the best!"><img src="https://img.shields.io/badge/-tweet%20about%20this-1da1f2?logoColor=fff&logo=twitter&labelColor=1da1f2&style=for-the-badge" alt="Tweet"></a>
 </div>
-
 
 
 
@@ -19,7 +16,7 @@
 
 Zorro is repack indexer/scraper which collects repacks from sources mentioned below, it keeps them locally into a .JSON file as reads and serves it as needed.
 
-Zorro always restarts the scraping process after its done to assure it always has the latest repacks.
+Zorro always restarts the scraping process after once its done to insure it always latest repacks.
 
 Zorro only keeps source, size and link of a repack. It also stores logs of searches for statistics.
 
@@ -39,11 +36,11 @@ For discussion, feedback or if you come across dead links please head over to [i
 
 ## Project structure
 
-- [Program.cs](Program.cs) - Main program file.
-- [Web/](Web/) - Web interface files
-- [Web/index.html](Web/index.html) Zorro homepage HTML
-- [Web/search.html](Web/search.html) Zorro search page HTML
-- [QuickMan.cs](QuickMan.cs) - A customized version of [QuickMan](https://github.com/thebitbrine/QuickMan)
+- [Program.cs](Zorro/Program.cs) - Main program file.
+- [Web/](Zorro/Web/) - Web interface files
+- [Web/index.html](Zorro/Web/index.html) Zorro homepage HTML
+- [Web/search.html](Zorro/Web/search.html) Zorro search page HTML
+- [QuickMan.cs](Zorro/QuickMan.cs) - A customized version of [QuickMan](https://github.com/thebitbrine/QuickMan)
 - [.gitignore](.gitignore) - gitignore file.
 - [LICENSE](LICENSE) - License file.
 - [README.md](README.md) - This file.
