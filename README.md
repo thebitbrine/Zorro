@@ -22,6 +22,17 @@ Zorro only keeps source, size and link of a repack. It also stores logs of searc
 
 
 
+## Sources
+
+- Xatab
+- Fitgirl
+- Skidrow
+- RGMechanics
+- ElAmigos
+- KapitalSin
+
+
+
 ## Hosts
 
 1. [Zorro.TheBitBrine](https://zorro.thebitbrine.com)
