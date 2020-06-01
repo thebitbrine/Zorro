@@ -14,11 +14,12 @@
 
 
 
+
 ## Information
 
 Zorro is repack indexer/scraper which collects repacks from sources mentioned below, it keeps them locally into a .JSON file as reads and serves it as needed.
 
-Zorro always restarts the scraping process after once its done to insure it always latest repacks.
+Zorro always restarts the scraping process after its done to assure it always has the latest repacks.
 
 Zorro only keeps source, size and link of a repack. It also stores logs of searches for statistics.
 
