@@ -32,7 +32,7 @@ Zorro only keeps source, size and link of a repack. It also stores logs of searc
 
 Contributions are welcome! Read the [contribution guidelines](contributing.md) to make sure nothing goes wrong.
 
-For discussion, feedback or if you come across dead links please head over to [issues](https://github.com/maximousblk/thebitbrine/issues/) page.
+For discussion, feedback or if you come across dead links please head over to [issues](https://github.com/thebitbrine/Zorro/issues/) page.
 
 ## Project structure
 
@@ -53,6 +53,6 @@ If you are a copyright owner or an agent thereof, and you believe that your work
 
 ## License
 
-[![License](https://img.shields.io/github/license/maximousblk/piracy?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/github/license/thebitbrine/Zorro?style=for-the-badge)](LICENSE)
 
 To the extent possible under law, [TheBitBrine](https://thebitbrine.com/) has waived all copyright and related or neighboring rights to this project.
