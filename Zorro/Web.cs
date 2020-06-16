@@ -68,8 +68,8 @@ namespace Zorro
                 }
                 else
                 {
-                    Entries.AddRange(ThePirateBay.Query(q));
                     var res = Entries.Where(x => x.Title.ToLower().Contains(q.ToLower())).Take(10).ToList();
+                    res.AddRange(ThePirateBay.Query(q));
                     if (q.Contains(" "))
                     {
                         var qu = q.Split(' ');
