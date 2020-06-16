@@ -87,7 +87,7 @@ namespace Zorro
                     }
 
                     var Data = new StringBuilder();
-                    foreach (var entry in FEntries.Take(30).GroupBy(x => x.Link).Select(y => y.First()))
+                    foreach (var entry in FEntries.Take(30).GroupBy(x => x.Link).Select(y => y.First()).OrderBy(x => DateTime.Parse(x.IndexDate)))
                     {
                         Data.AppendLine($"<tr><td class=\"column1\">{entry.IndexDate}</td><td class=\"column2\">{entry.Title}</td><td class=\"column3\">{FormatSize(entry.Size)}</td><td class=\"column4\">{entry.Repacker}</td><td class=\"column5\"><a href=\"/open?q={q}&link={entry.Link}\" target=\"_blank\">Source</a></td></tr>");
                     }
