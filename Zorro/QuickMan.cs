@@ -85,6 +85,7 @@ namespace TheBitBrine
             try
             {
                 string Address = $"http://{_Address}:{_Port}/";
+                AllowListener(Address);
                 Listener = new HttpListener();
                 Listener.Prefixes.Add(Address);
                 Listener.Start();
@@ -129,6 +130,17 @@ namespace TheBitBrine
                 Socket.BeginConnect("8.8.8.8", 65530, null, null).AsyncWaitHandle.WaitOne(500, true);
                 return (Socket.LocalEndPoint as System.Net.IPEndPoint)?.Address.ToString();
             }
+        }
+
+        public void AllowListener(string URL)
+        {
+            try
+            {
+                var _URL = new Uri(URL);
+                string command = $"http add urlacl url={_URL.Scheme}://{_URL.Host}:{_URL.Port}/ user=Everyone";
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("netsh", command) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true, Verb = "runas" });
+            }
+            catch { }
         }
 
         public void Respond(string Response, HttpListenerContext Context)

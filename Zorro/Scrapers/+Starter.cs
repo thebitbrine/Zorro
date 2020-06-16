@@ -12,7 +12,6 @@ namespace Zorro.Scrapers
 {
     public static class Starter
     {
-        public static bool FirstRun = true;
         public static void UpdateLists()
         {
             while (true)
@@ -36,13 +35,31 @@ namespace Zorro.Scrapers
                                     if (!Entries.Any(x => x.Link == en.Link))
                                         NewEntries.Add(en);
                                 }
-                                Entries.AddRange(NewEntries);
-
+                                if (NewEntries.Any())
+                                {
+                                    Entries.AddRange(NewEntries);
+                                    Zorro.MongoDB.PushBatch(NewEntries);
+                                }
                             }
                             catch { }
                         }
                     }
+#if DEBUG
+                    Thread.Sleep(5000);
+#else
+                    Thread.Sleep(60000);
+#endif
+                }
+                catch { }
+            }
+        }
 
+        public static void Dispatcher()
+        {
+            while (true)
+            {
+                try
+                {
                     new Thread(XatabScraper.Xatab) { IsBackground = true }.Start();
                     new Thread(FitGirlScraper.Fitgirl) { IsBackground = true }.Start();
                     new Thread(SkidrowScraper.Skidrow) { IsBackground = true }.Start();

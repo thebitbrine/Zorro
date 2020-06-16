@@ -32,36 +32,27 @@ namespace Zorro
 
         public static void StartServer()
         {
+#if DEBUG 
+            MaxPages = 1;
+#endif
+
             Entries.Add(new Entry() { IndexDate = "2019-7-16 4:22", Link = "https://github.com/thebitbrine", Repacker = "TheBitBrine", Size = "64 KB", Title = "Zorro v1.1" });
             
             Directory.CreateDirectory("Data");
             
             new Thread(UpdateLists) { IsBackground = true }.Start();
-            new Thread(WriteStats) { IsBackground = true }.Start();
 
             API = new QuickMan();
             var Endpoints = new Dictionary<string, Action<HttpListenerContext>>();
 
             Endpoints.Add("query", Query);
             Endpoints.Add("/", Index);
-            Endpoints.Add("Web", Web);
+            Endpoints.Add("Web", WebTools.Web);
             Endpoints.Add("open", OpenLink);
             Endpoints.Add("random", RandomGame);
             API.Start(8130, Endpoints, 20);
 
         }
-        
-        public static void WriteStats()
-        {
-            while (true)
-            {
-                try
-                {
-                    File.AppendAllLines("Stats.csv", Stats.ToArray());
-                }
-                catch { }
-                Thread.Sleep(60000);
-            }
-        }
+       
     }
 }

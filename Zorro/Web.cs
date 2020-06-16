@@ -1,11 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
+using Zorro.Scrapers.API;
 using static Zorro.Classes;
 using static Zorro.Program;
 using static Zorro.Toolbox;
@@ -35,7 +38,7 @@ namespace Zorro
                 Recents.AppendLine($"<a class=\"bubble\" href=\"/query?q={Rec}\">{ShowQ}</a>");
             }
             try { API.Respond(File.ReadAllText("Web/index.html").Replace("%recents%", Recents.ToString()).Replace("%count%", $"With more than {String.Format("{0:n0}", Entries.Count)} games indexed!"), "text/html", Context); } catch { }
-            CollectStats(Context, "/", 1);
+            CollectStats(Context, "/");
         }
 
         public static void Web(HttpListenerContext Context)
@@ -55,7 +58,6 @@ namespace Zorro
         {
             try
             {
-                //var q = Context.Request.QueryString["q"];
                 var body = new StreamReader(Context.Request.InputStream).ReadToEnd();
                 var q = HttpUtility.UrlDecode(body).Replace("q=", "").Replace("+", " ");
                 if (string.IsNullOrWhiteSpace(q) && Context.Request.QueryString.AllKeys.Contains("q"))
@@ -66,6 +68,7 @@ namespace Zorro
                 }
                 else
                 {
+                    Entries.AddRange(ThePirateBay.Query(q));
                     var res = Entries.Where(x => x.Title.ToLower().Contains(q.ToLower())).Take(10).ToList();
                     if (q.Contains(" "))
                     {
@@ -83,7 +86,6 @@ namespace Zorro
                             FEntries.Add(Entry);
                     }
 
-
                     var Data = new StringBuilder();
                     foreach (var entry in FEntries.Take(30).GroupBy(x => x.Link).Select(y => y.First()))
                     {
@@ -91,7 +93,7 @@ namespace Zorro
                     }
                     var template = File.ReadAllText("Web/search.html");
                     API.Respond(template.Replace("%data%", Data.ToString()).Replace("%q%", q), "text/html", Context);
-                    CollectStats(Context, q, FEntries.Count);
+                    CollectStats(Context, q);
                 }
             }
             catch { }
@@ -102,35 +104,64 @@ namespace Zorro
         {
             try
             {
-                string Stat = $"{Context.Request.RemoteEndPoint} > {HttpUtility.UrlDecode(Context.Request.QueryString["q"])} > {HttpUtility.UrlDecode(Context.Request.QueryString["link"])}";
-                Stats.Add(Stat);
-                Console.WriteLine(Stat);
+                var Query = HttpUtility.UrlDecode(Context.Request.QueryString["q"]);
+                CollectStats(Context, Query);
                 Context.Response.Redirect(Context.Request.QueryString["link"]);
             }
             catch { }
         }
 
-        public static void CollectStats(HttpListenerContext Context, string Query, int ResCount)
+        public static void CollectStats(HttpListenerContext Context, string Query)
         {
             try
             {
-                if (ResCount > 0)
+                var Request = new iRequest()
                 {
-                    string Stat = $"{Context.Request.RemoteEndPoint} > {Context.Request.RawUrl} > {Query}";
-                    while (LastQueries.Count > 3)
-                        LastQueries.RemoveAt(0);
-                    if (Query != "/" && !string.IsNullOrWhiteSpace(Query))
-                    {
-                        string ShowQ = Query;
-                        if (!LastQueries.Contains(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(ShowQ)))
-                            LastQueries.Add(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(ShowQ));
-                    }
+                    Endpoint = Context.Request.RemoteEndPoint.ToString(),
+                    Headers = ToDictionary(Context.Request.Headers),
+                    Referer = Context.Request.UrlReferrer,
+                    URI = Context.Request.Url,
+                    UserAgent = Context.Request.UserAgent,
+                    UserLanguages = Context.Request.UserLanguages
+                };
 
-                    Stats.Add(Stat);
-                    Console.WriteLine(Stat);
+                var Stat = new Stat() { Request = Request, Query = Query };
+                while (LastQueries.Count > 3)
+                    LastQueries.RemoveAt(0);
+                if (Query != "/" && !string.IsNullOrWhiteSpace(Query))
+                {
+                    string ShowQ = Query;
+                    if (!LastQueries.Contains(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(ShowQ)))
+                        LastQueries.Add(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(ShowQ));
                 }
+
+                Zorro.MongoDB.SendStat(Stat);
             }
             catch { }
         }
+
+        public static Dictionary<string, string> ToDictionary(NameValueCollection nvc)
+        {
+            return nvc.AllKeys.ToDictionary(k => k, k => nvc[k]);
+        }
+
+        public class Stat
+        {
+            public DateTime Date = DateTime.UtcNow;
+            public iRequest Request;
+            public string Query;
+
+        }
+
+        public class iRequest
+        {
+            public Uri URI;
+            public string Endpoint;
+            public Uri Referer;
+            public string UserAgent;
+            public string[] UserLanguages;
+            public Dictionary<string, string> Headers;
+        }
+
     }
 }
