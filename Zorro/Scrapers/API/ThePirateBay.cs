@@ -20,7 +20,7 @@ namespace Zorro.Scrapers.API
                 {
                     if (TPB.status == "trusted" || TPB.status == "vip")
                     {
-                        if (TPB.category >= 400 || TPB.category < 500)
+                        if (TPB.category >= 400 && TPB.category < 500)
                         {
                             var Entry = new Entry()
                             {
